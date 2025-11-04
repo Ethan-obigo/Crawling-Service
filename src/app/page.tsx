@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { RequestData } from '@/utils/crawler';
+import ExcelDownloader from '@/components/ExcelDownloader';
 
 export default function CrawlerPage() {
   const today = new Date();
@@ -66,7 +67,7 @@ export default function CrawlerPage() {
   return (
     <div className='container mx-auto p-8'>
       <h1 className='text-3xl font-bold mb-6'>📅 크롤링 데이터 요청</h1>
-      <div className='flex space-x-4 mb-8'>
+      <div className='flex items-center space-x-4 mb-8'>
         <input
           type='month'
           value={startMonth}
@@ -83,10 +84,17 @@ export default function CrawlerPage() {
         <button
           onClick={handleFetch}
           disabled={loading}
-          className='bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400'
+          className='bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400 hover:bg-blue-700 transition cursor-pointer'
         >
           {loading ? '데이터 처리 중...' : '데이터 요청'}
         </button>
+        {data && data.length > 0 && (
+          <ExcelDownloader
+            data={data}
+            startMonth={startMonth}
+            endMonth={endMonth}
+          />
+        )}
       </div>
 
       {error && (
@@ -101,7 +109,6 @@ export default function CrawlerPage() {
             총 요약: ({startMonth} ~ {endMonth}){' '}
             {totalRequests.toLocaleString()} 회
           </h2>
-          {/* ... (테이블 표시 로직 유지) */}
           <div className='overflow-x-auto'>
             <table className='min-w-full divide-y divide-gray-200 border'>
               <thead className='bg-gray-50'>
